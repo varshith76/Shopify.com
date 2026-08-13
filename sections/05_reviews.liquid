@@ -1,0 +1,101 @@
+<section class="purelane-section" id="{{ section.settings.anchor_id | default: 'reviews' }}">
+  <div class="purelane-container">
+    <div class="purelane-section-heading">
+      <div class="purelane-kicker">{{ section.settings.kicker }}</div>
+      <h2 class="purelane-heading">{{ section.settings.heading }}</h2>
+      <div class="purelane-rule"><i></i><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16 3.5c.7 0 1.4.4 1.8 1.1l2.6 5.1 5.7 1.5c1 .3 1.4 1.6.7 2.4l-3.8 4.2 1 5.7c.2 1-.9 1.8-1.8 1.3l-5.3-2.9-5.3 2.9c-.9.5-2-.3-1.8-1.3l1-5.7-3.8-4.2c-.7-.8-.3-2.1.7-2.4l5.7-1.5 2.7-5.1c.4-.7 1.1-1.1 1.8-1.1Z"/></svg><i></i></div>
+      <p class="purelane-lede">{{ section.settings.description }}</p>
+    </div>
+
+    <div class="purelane-review-list">
+      {% for block in section.blocks %}
+        <article class="purelane-review" {{ block.shopify_attributes }}>
+          <div class="purelane-review__stars" aria-label="{{ block.settings.rating }} out of 5 stars">{% for i in (1..5) %}★{% endfor %}</div>
+          <h3 class="purelane-review__name">{{ block.settings.name }}</h3>
+          <p class="purelane-review__body">{{ block.settings.quote }}</p>
+          <cite class="purelane-review__meta">{{ block.settings.meta }}</cite>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Purelane reviews",
+  "tag": "section",
+  "class": "purelane-reviews-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "reviews"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Loved by homes"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What customers are saying"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Real routines, real results, and cleaner surfaces without the harsh finish."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Aditi N."
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Review quote",
+          "default": "The scent is subtle, the formula feels genuinely gentle, and the bottles look beautiful in my kitchen."
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta label",
+          "default": "Verified customer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane reviews",
+      "blocks": [
+        { "type": "review", "settings": { "name": "Aditi N.", "quote": "The scent is subtle, the formula feels genuinely gentle, and the bottles look beautiful in my kitchen.", "meta": "Verified customer" } },
+        { "type": "review", "settings": { "name": "Rohan M.", "quote": "Finally, a cleaner that works on greasy stovetops without leaving a residue behind.", "meta": "Kitchen routine" } },
+        { "type": "review", "settings": { "name": "Neha P.", "quote": "The handwash is a standout — soft on skin, beautiful on the counter, and easy to refill.", "meta": "Daily use" } },
+        { "type": "review", "settings": { "name": "Sana K.", "quote": "Bundles are easy to manage, and every product feels premium from packaging to performance.", "meta": "Home owner" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

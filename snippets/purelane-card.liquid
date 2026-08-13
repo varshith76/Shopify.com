@@ -1,0 +1,71 @@
+{% comment %}
+  Reusable Purelane product card for collection, combo, and bundle blocks.
+  Accepts: product, card_class, badge_text, show_rating, show_compare_price
+{% endcomment %}
+
+{% assign product = product %}
+{% assign featured_media = product.featured_media | default: product.media.first %}
+{% assign variant = product.selected_or_first_available_variant | default: product.variants.first %}
+{% assign product_available = true %}
+
+{% if variant and variant.available == false %}
+  {% assign product_available = false %}
+{% endif %}
+
+<article class="purelane-card{% if card_class %} {{ card_class }}{% endif %}" aria-label="{{ product.title | escape }} product card">
+  <div class="purelane-card__media">
+    {% if featured_media %}
+      <img
+        class="purelane-card__image"
+        src="{{ featured_media | image_url: width: 600 }}"
+        alt="{{ product.title | escape }}"
+        loading="lazy"
+        width="600"
+        height="600"
+      >
+    {% else %}
+      <div class="purelane-fallback" role="img" aria-label="{{ product.title | escape }} placeholder image">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M21 19.1V5.9A2.9 2.9 0 0 0 18.1 3H5.9A2.9 2.9 0 0 0 3 5.9v13.2A2.9 2.9 0 0 0 5.9 21h12.2A2.9 2.9 0 0 0 21 19.1ZM7.3 8.2a1.3 1.3 0 1 1 2.6 0 1.3 1.3 0 0 1-2.6 0Zm11.3 10.5-4-4.4a1.1 1.1 0 0 0-1.6-.1l-2.1 2.1-2.4-2.4a1.1 1.1 0 0 0-1.6 0L5.4 16.3v1.4h13.2v.9Zm0-8.3v6.1l-3.6-3.6 1.4-1.5c.4-.4 1-.4 1.4 0l.8.8 1.9-2.1c.4-.4 1-.4 1.4 0Z"/>
+        </svg>
+        <span>{{ 'products.product.image_unavailable' | t }}</span>
+      </div>
+    {% endif %}
+
+    {% if badge_text != blank %}
+      <span class="purelane-card__badge">{{ badge_text }}</span>
+    {% endif %}
+  </div>
+
+  <h3 class="purelane-card__title">{{ product.title | truncate: 38 }}</h3>
+
+  {% if show_rating %}
+    <div class="purelane-card__meta">
+      <span>★★★★★</span>
+      <b>4.9</b>
+    </div>
+  {% endif %}
+
+  <div class="purelane-card__price">
+    <strong>{{ product.price | money }}</strong>
+    {% if product.compare_at_price > product.price %}
+      <s>{{ product.compare_at_price | money }}</s>
+      <em>Save</em>
+    {% endif %}
+  </div>
+
+  <form method="post" action="{{ routes.cart_add_url }}" class="purelane-card__form" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{ variant.id }}">
+    <button
+      type="submit"
+      class="purelane-button purelane-button--primary purelane-card__button"
+      {% unless product_available %}disabled aria-disabled="true"{% endunless %}
+    >
+      {% if product_available %}
+        {{ 'products.product.add_to_cart' | t }}
+      {% else %}
+        {{ 'products.product.sold_out' | t }}
+      {% endif %}
+    </button>
+  </form>
+</article>

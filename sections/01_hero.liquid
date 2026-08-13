@@ -1,0 +1,125 @@
+{% liquid
+  assign hero_collection = section.settings.collection
+  assign hero_products = hero_collection.products | default: collections.all.products
+  assign hero_products = hero_products | slice: 0, 3
+%}
+
+<section class="purelane-section purelane-hero" id="{{ section.settings.anchor_id | default: 'hero' }}">
+  <div class="purelane-container purelane-hero__inner">
+    <div class="purelane-hero__content">
+      <div class="purelane-kicker">{{ section.settings.kicker }}</div>
+      <h1 class="purelane-display">{{ section.settings.heading }}</h1>
+      <p class="purelane-lede purelane-hero__copy">{{ section.settings.subheading }}</p>
+
+      <div class="purelane-hero__actions">
+        <a class="purelane-button purelane-button--primary" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">
+          {{ section.settings.primary_label }}
+        </a>
+        <a class="purelane-button purelane-button--ghost" href="{{ section.settings.secondary_link | default: '#shop' }}">
+          {{ section.settings.secondary_label }}
+        </a>
+      </div>
+    </div>
+
+    <div class="purelane-hero__visual" aria-label="Featured Purelane products">
+      {% for product in hero_products limit: 3 %}
+        <div class="purelane-hero__stack purelane-hero__stack--{{ forloop.index }}">
+          {% if product.featured_media %}
+            <img
+              src="{{ product.featured_media | image_url: width: 800 }}"
+              alt="{{ product.title | escape }}"
+              loading="eager"
+              width="800"
+              height="800"
+            >
+          {% else %}
+            <div class="purelane-fallback" role="img" aria-label="{{ product.title | escape }} placeholder image">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M21 19.1V5.9A2.9 2.9 0 0 0 18.1 3H5.9A2.9 2.9 0 0 0 3 5.9v13.2A2.9 2.9 0 0 0 5.9 21h12.2A2.9 2.9 0 0 0 21 19.1ZM7.3 8.2a1.3 1.3 0 1 1 2.6 0 1.3 1.3 0 0 1-2.6 0Zm11.3 10.5-4-4.4a1.1 1.1 0 0 0-1.6-.1l-2.1 2.1-2.4-2.4a1.1 1.1 0 0 0-1.6 0L5.4 16.3v1.4h13.2v.9Zm0-8.3v6.1l-3.6-3.6 1.4-1.5c.4-.4 1-.4 1.4 0l.8.8 1.9-2.1c.4-.4 1-.4 1.4 0Z"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      {% if hero_products.size > 0 %}
+        <div class="purelane-hero__price">
+          <span>{{ section.settings.price_label }}</span>
+          <strong>{{ hero_products[0].price | money }}</strong>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Purelane hero",
+  "tag": "section",
+  "class": "purelane-hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "hero"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Plant-based homecare"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Clean routines, calmer homes."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Thoughtful eco cleaners for every room — from handwash to kitchen staples, made with plant-powered ingredients and zero harsh residue."
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "Explore range"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "text",
+      "id": "price_label",
+      "label": "Price label",
+      "default": "from"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Featured collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane hero"
+    }
+  ]
+}
+{% endschema %}

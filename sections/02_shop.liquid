@@ -1,0 +1,86 @@
+{% assign products_to_show = section.settings.collection.products %}
+{% if section.settings.collection == blank %}
+  {% assign products_to_show = collections.all.products %}
+{% endif %}
+
+<section class="purelane-section purelane-shop" id="{{ section.settings.anchor_id | default: 'shop' }}">
+  <div class="purelane-container">
+    <div class="purelane-section-heading">
+      <div class="purelane-kicker">{{ section.settings.kicker }}</div>
+      <h2 class="purelane-heading">{{ section.settings.heading }}</h2>
+      <div class="purelane-rule"><i></i><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16 3.5c.7 0 1.4.4 1.8 1.1l2.6 5.1 5.7 1.5c1 .3 1.4 1.6.7 2.4l-3.8 4.2 1 5.7c.2 1-.9 1.8-1.8 1.3l-5.3-2.9-5.3 2.9c-.9.5-2-.3-1.8-1.3l1-5.7-3.8-4.2c-.7-.8-.3-2.1.7-2.4l5.7-1.5 2.7-5.1c.4-.7 1.1-1.1 1.8-1.1Z"/></svg><i></i></div>
+      <p class="purelane-lede">{{ section.settings.description }}</p>
+    </div>
+
+    <div class="purelane-card-grid">
+      {% for product in products_to_show limit: section.settings.products_to_show %}
+        {% render 'purelane-card', product: product, badge_text: section.settings.badge_text, show_rating: section.settings.show_rating %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Purelane shop",
+  "tag": "section",
+  "class": "purelane-shop-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "shop"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "New arrivals"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop best sellers"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Daily essentials designed for clean routines, soft surfaces, and a lighter footprint."
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge label",
+      "default": "Best seller"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show product rating",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Purelane shop"
+    }
+  ]
+}
+{% endschema %}
